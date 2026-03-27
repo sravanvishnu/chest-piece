@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spin Wheel Decider</title>
+    <meta name="description" content="A simple, premium spin wheel to randomly select and remove names.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar for Inputs -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Spin The Wheel</h1>
+                <p>Add names below, then click spin!</p>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="nameInput" placeholder="Enter a name..." autocomplete="off" />
+                <button id="addNameBtn" class="premium-btn">Add</button>
+            </div>
+
+            <div class="names-container">
+                <h3>Current Names (<span id="nameCount">0</span>)</h3>
+                <ul id="namesList" class="names-list">
+                    <!-- Names will be injected here via JS -->
+                </ul>
+            </div>
+
+            <div class="actions">
+                <button id="spinBtn" class="premium-btn spin-btn" disabled>SPIN</button>
+            </div>
+        </aside>
+
+        <!-- Main Area for the Wheel -->
+        <main class="wheel-area">
+            <div class="wheel-container">
+                <!-- Pointer -->
+                <div class="pointer" id="pointer"></div>
+                <!-- The Wheel -->
+                <canvas id="wheelCanvas" width="500" height="500"></canvas>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for Winner -->
+    <div id="winnerModal" class="modal">
+        <div class="modal-content">
+            <h2>🎉 Congratulations! 🎉</h2>
+            <p id="winnerText" class="winner-name">Name Here</p>
+            <p class="modal-subtext">This name has been removed from the list.</p>
+            <button id="closeModalBtn" class="premium-btn">Awesome!</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
