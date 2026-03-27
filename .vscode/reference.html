@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wheel of Names Clone</title>
+    <style>
+        :root {
+            --bg-dark: #1a1a2e;
+            --accent-blue: #3b82f6;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* Header / Logo Section */
+        .header {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* The Spinner Container */
+        .wheel-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin-bottom: 40px;
+        }
+
+        /* The Pointer (The yellow triangle) */
+        .pointer {
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-right: 25px solid #facc15;
+            /* Yellow */
+            z-index: 10;
+        }
+
+        /* The Wheel */
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            background: conic-gradient(#3b82f6 0deg 120deg,
+                    #e11d48 120deg 240deg,
+                    #facc15 240deg 360deg);
+            position: relative;
+            transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        /* Labels on the wheel */
+        .name-label {
+            position: absolute;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Center White Circle */
+        .wheel-center {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            font-size: 0.7rem;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Control Panel */
+        .controls {
+            width: 100%;
+            max-width: 400px;
+            background: #25273c;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #3e415b;
+            margin-bottom: 15px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid var(--accent-blue);
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            resize: none;
+            outline: none;
+            min-height: 100px;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        button {
+            background: #3e415b;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        button:hover {
+            background: #4e5277;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <span style="font-size: 1.2rem;">wheelofnames.com</span>
+        <div style="background: white; width: 25px; height: 25px; border-radius: 50%;"></div>
+    </div>
+
+    <div class="wheel-container">
+        <div class="pointer"></div>
+        <div class="wheel" id="wheel" onclick="spinWheel()">
+            <div class="wheel-center">Tap to spin</div>
+            <div class="name-label" style="transform: rotate(60deg) translateY(-100px);">Sreerag</div>
+            <div class="name-label" style="transform: rotate(180deg) translateY(-100px);">Sravan</div>
+            <div class="name-label" style="transform: rotate(300deg) translateY(-100px);">Jugal</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="tabs">
+            <div class="tab active">Entries (3)</div>
+            <div class="tab">Results (0)</div>
+        </div>
+        <textarea>Sreerag
+Sravan
+Jugal</textarea>
+        <div class="button-row">
+            <button>🔀 Shuffle</button>
+            <button>📊 Sort</button>
+            <button>🖼️ Add image</button>
+        </div>
+    </div>
+
+    <script>
+        let currentRotation = 0;
+
+        function spinWheel() {
+            // Adds a random number of full rotations plus a random offset
+            const extraRotation = Math.floor(Math.random() * 360) + 1440;
+            currentRotation += extraRotation;
+            document.getElementById('wheel').style.transform = `rotate(${currentRotation}deg)`;
+        }
+    </script>
+</body>
+
+</html>

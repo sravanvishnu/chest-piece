@@ -1,63 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spin Wheel Decider</title>
-    <meta name="description" content="A simple, premium spin wheel to randomly select and remove names.">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Wheel of Names | Random name picker</title>
+    <!-- Quicksand font to match the original -->
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:400,500,600,700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
+<body class="theme-dark">
 
-<body>
-    <div class="app-container">
-        <!-- Sidebar for Inputs -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h1>Spin The Wheel</h1>
-                <p>Add names below, then click spin!</p>
+    <div class="q-layout">
+        <header class="q-header">
+            <div class="q-toolbar header row justify-between items-center">
+                <!-- Logo -->
+                <a class="q-btn btn-flat row items-center no-decoration brand-link" href="#">
+                    <div class="q-avatar">
+                        <img src="https://wheelofnames.com/images/logo-dark-background-38.png" alt="logo" width="38" height="38">
+                    </div>
+                    <h1 class="brand-title">wheelofnames.com</h1>
+                </a>
+                
+                <div class="q-space"></div>
+                
+                <!-- Toolbar Buttons -->
+                <div class="toolbar-buttons row desktop-only">
+                    <button class="q-btn btn-flat"><i class="fas fa-palette"></i> Customize</button>
+                    <button class="q-btn btn-flat"><i class="fas fa-file"></i> New</button>
+                    <button class="q-btn btn-flat"><i class="fas fa-folder-open"></i> Open</button>
+                    <button class="q-btn btn-flat"><i class="fas fa-save"></i> Save</button>
+                    <button class="q-btn btn-flat"><i class="fas fa-share-alt"></i> Share</button>
+                    <button class="q-btn btn-flat"><i class="fas fa-search"></i> Gallery</button>
+                    <button class="q-btn btn-flat"><i class="fas fa-expand"></i></button>
+                    <button class="q-btn btn-flat">More <i class="fas fa-caret-down"></i></button>
+                    <button class="q-btn btn-flat"><i class="fas fa-globe"></i> English</button>
+                </div>
+                <button class="q-btn btn-flat mobile-only hamburger"><i class="fas fa-bars"></i></button>
+            </div>
+            <div class="q-layout-shadow"></div>
+        </header>
+
+        <div class="q-page-container">
+            <div class="page-content bg-gradient">
+                <!-- LEft Col -->
+                <div class="left-column">
+                    <div class="q-btn btn-round bg-primary text-white btn-pencil"><i class="fas fa-pencil-alt"></i></div>
+                </div>
+
+                <!-- Center Col: Wheel -->
+                <div class="center-column">
+                    <div class="wheel-container" onclick="spinWheel()" style="cursor: pointer;">
+                        <div class="pointer"></div>
+                        <!-- We keep our pure CSS wheel but adapt formatting -->
+                        <div class="wheel" id="wheel">
+                            <div id="wheel-labels"></div>
+                        </div>
+                        
+                        <!-- Original uses an SVG overlay outside the wheel so it doesn't rotate -->
+                        <svg class="wheel-svg-text" viewBox="-100 -100 200 200">
+                            <defs>
+                                <path id="curve-top" d="M -52 0 A 1 1 0 0 1 52 0"></path>
+                                <path id="curve-bottom" d="M -60 0 A 1 1 0 0 0 60 0"></path>
+                            </defs>
+                            <circle cx="0" cy="0" r="18" fill="white" class="wheel-center-dot"></circle>
+                            <text text-anchor="middle" fill="white" font-weight="800" font-size="12" filter="drop-shadow(0 0 5px rgba(0,0,0,0.8))">
+                                <textPath href="#curve-top" startOffset="50%">Tap to spin</textPath>
+                            </text>
+                            <text text-anchor="middle" fill="white" font-weight="800" font-size="12" filter="drop-shadow(0 0 5px rgba(0,0,0,0.8))">
+                                <textPath href="#curve-bottom" startOffset="50%">or press ctrl+enter</textPath>
+                            </text>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Right Col: Controls -->
+                <div class="right-column">
+                    <div class="q-card dark-card flex flex-col full-height">
+                        <div class="q-tabs row">
+                            <div class="q-tab active" id="entriesTab">
+                                Entries <span class="q-badge bg-grey" id="entriesCount">3</span>
+                                <div class="tab-indicator"></div>
+                            </div>
+                            <div class="q-tab" id="resultsTab">
+                                Results <span class="q-badge bg-grey" id="resultsCount">0</span>
+                                <div class="tab-indicator"></div>
+                            </div>
+                        </div>
+
+                        <div class="q-tab-panel flex flex-col flex-1">
+                            <div class="utils-row row items-center">
+                                <button class="btn-util bg-primary" id="shuffleBtn"><i class="fas fa-random"></i> Shuffle</button>
+                                <button class="btn-util bg-primary" id="sortBtn"><i class="fas fa-sort-alpha-up"></i> Sort</button>
+                                <button class="btn-util bg-primary"><i class="fas fa-image"></i> Add image <i class="fas fa-caret-down"></i></button>
+                                
+                                <label class="advanced-checkbox row items-center cursor-pointer">
+                                    <input type="checkbox"> Advanced
+                                </label>
+                            </div>
+
+                            <textarea id="namesTextarea" spellcheck="false" autocomplete="off" class="flex-1 basic-editor"></textarea>
+
+                            <div class="row add-wheel-row items-center">
+                                <button class="btn-util bg-primary row items-center"><i class="fas fa-plus q-pr"></i> Add wheel <i class="fas fa-caret-down q-pl"></i></button>
+                                <span class="q-badge bg-warning text-black ml-sm">Beta</span>
+                            </div>
+                        </div>
+
+                        <div class="version-row row justify-between">
+                            <span>Version 405 <span class="q-badge outline brand-badge">New!</span></span>
+                            <a href="#" class="changelog-link">Changelog</a>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="input-group">
-                <input type="text" id="nameInput" placeholder="Enter a name..." autocomplete="off" />
-                <button id="addNameBtn" class="premium-btn">Add</button>
+            <!-- Bottom Information Area -->
+            <hr class="divider">
+            <div class="about-card-row">
+                <div class="about-card-column">
+                    <div class="q-card dark-card about-card">
+                        <div class="card-header row items-center">
+                            <img src="https://wheelofnames.com/icons/favicon-32x32.png" alt="" width="32" height="32">
+                            <span class="text-h5">What is the wheel spinner for?</span>
+                        </div>
+                        <div class="card-body">
+                            <p>Every day we hear from people who use our website in new ways:</p>
+                            <ul>
+                                <li>Random name picker in the classroom.</li>
+                                <li>Pick which loyal customer will get the monthly giveaway.</li>
+                                <li>Use the wheel spinner to pick a lucky winner among attendees.</li>
+                                <li>Randomize who speaks first in standup meetings.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-card-column">
+                    <div class="q-card dark-card about-card">
+                        <div class="card-header row items-center">
+                            <img src="https://wheelofnames.com/icons/favicon-32x32.png" alt="" width="32" height="32">
+                            <span class="text-h5">How to use the wheel spinner</span>
+                        </div>
+                        <div class="card-body">
+                            <p>It's easy: type in your entries in the textbox to the right of the wheel, then click the wheel to spin it and get a random winner.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div class="names-container">
-                <h3>Current Names (<span id="nameCount">0</span>)</h3>
-                <ul id="namesList" class="names-list">
-                    <!-- Names will be injected here via JS -->
-                </ul>
-            </div>
-
-            <div class="actions">
-                <button id="spinBtn" class="premium-btn spin-btn" disabled>SPIN</button>
-            </div>
-        </aside>
-
-        <!-- Main Area for the Wheel -->
-        <main class="wheel-area">
-            <div class="wheel-container">
-                <!-- Pointer -->
-                <div class="pointer" id="pointer"></div>
-                <!-- The Wheel -->
-                <canvas id="wheelCanvas" width="500" height="500"></canvas>
-            </div>
-        </main>
-    </div>
-
-    <!-- Modal for Winner -->
-    <div id="winnerModal" class="modal">
-        <div class="modal-content">
-            <h2>🎉 Congratulations! 🎉</h2>
-            <p id="winnerText" class="winner-name">Name Here</p>
-            <p class="modal-subtext">This name has been removed from the list.</p>
-            <button id="closeModalBtn" class="premium-btn">Awesome!</button>
         </div>
     </div>
 
+    <!-- Winner Modal -->
+    <div id="winnerModal" class="modal">
+        <div class="modal-content dark-card">
+            <h2>🎉 We have a winner! 🎉</h2>
+            <h1 id="winnerText" class="winner-name text-primary">Name Here</h1>
+            <div class="row justify-center mt-md gap-md">
+                <button id="removeWinnerBtn" class="btn-util bg-negative">Remove</button>
+                <button id="closeModalBtn" class="btn-util bg-positive">Keep</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="script.js"></script>
 </body>
-
 </html>
